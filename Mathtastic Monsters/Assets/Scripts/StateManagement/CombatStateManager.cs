@@ -46,6 +46,8 @@ public class CombatStateManager : ParentsStateManager
 
     public helpPopup popup;
 
+    public GameObject SetAgeContainer;
+
     //Start off by linking every internal object to each other.
     void Start()
     {
@@ -69,8 +71,22 @@ public class CombatStateManager : ParentsStateManager
         {
             changeState(playStatus.subjectSelect);
             backgrounds.startBack(playStatus.subjectSelect);
-        }        
+        }
+
+
+        if (!list.equip.AgeSet)
+        {
+            SetAgeContainer.SetActive(true);
+
+        }
+        else
+        {
+            SetAgeContainer.SetActive(false);
+        }
     }
+
+
+
     //Revert back to lesson's subject. 
     public void backToSubject()
     {
@@ -84,7 +100,7 @@ public class CombatStateManager : ParentsStateManager
             //need to set proper integer here.;
 
             case operators.Addition:
-                changeState(playStatus.Addition);                
+                changeState(playStatus.Addition);
                 break;
             case operators.Subtraction:
                 changeState(playStatus.Subtraction);
@@ -97,7 +113,7 @@ public class CombatStateManager : ParentsStateManager
                 break;
             default:
                 changeState(playStatus.MathFortress);
-                break;                
+                break;
         }
         FindObjectOfType<LevelSelection>().ChangeIndex(monsterM.quizRunning.quizIndex);
     }
@@ -128,7 +144,7 @@ public class CombatStateManager : ParentsStateManager
                 break;
             case playStatus.Addition:
                 awakenSubject(additionSelection);
-                additionSelection.SetActive(true);            
+                additionSelection.SetActive(true);
                 break;
             case playStatus.Subtraction:
                 awakenSubject(subtractionSelection);
@@ -163,7 +179,7 @@ public class CombatStateManager : ParentsStateManager
                 container.DisableThisAndCalculator();
 
                 break;
-            case playStatus.Won:                
+            case playStatus.Won:
                 checkLevelsAvailable();
                 nextButton.ready();
                 combatContainer.SetActive(true);
@@ -287,5 +303,18 @@ public class CombatStateManager : ParentsStateManager
         }
         return false;
 
+    }
+
+
+    public void SelectAge(int m_age)
+    {
+        AgeBracket age = (AgeBracket)m_age;
+
+        list.equip.AgeSet = true;
+
+        list.equip.SetAge = age;
+        list.equip.currentAge = age;
+
+        SetAgeContainer.SetActive(false);
     }
 }

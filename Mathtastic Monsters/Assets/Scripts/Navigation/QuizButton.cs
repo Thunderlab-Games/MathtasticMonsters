@@ -24,6 +24,10 @@ public class QuizButton : MonoBehaviour
     public int quizIndex;
     internal questionContainer parent;
 
+
+    public ScaledButton[] scaledButtons = new ScaledButton[6];
+
+
     public int variableCount = 2; //Number of variables being summed.
 
     public float levelTime = 0; //Amount of additional time added at level start.
@@ -74,6 +78,7 @@ public class QuizButton : MonoBehaviour
 
     internal int validNumbers;
 
+    equipmentManager equipmentManager;
 
     // Use this for initialization
     public virtual void Start()
@@ -83,6 +88,8 @@ public class QuizButton : MonoBehaviour
     //Call the quizManager to start a quiz using this button as the basis.
     public virtual void buttonUsed(phases a_phase)
     {
+        setStats();
+
         p_manager = GameObject.Find("MonsterManager").GetComponent<MonsterManager>();
 
         if (!storyManager)
@@ -94,5 +101,69 @@ public class QuizButton : MonoBehaviour
 
 
         p_manager.StartLevel(this);
+    }
+
+
+    public void setStats()
+    {
+        equipmentManager = FindObjectOfType<equipmentList>().equip;
+
+        ScaledButton currentScaled = null;
+
+        int age = (int)equipmentManager.currentAge;
+
+
+        if (scaledButtons[age] != null && age < scaledButtons.Length)
+        {
+            currentScaled = scaledButtons[age];
+        }
+        else
+        {
+            for (int i = (int)equipmentManager.currentAge; i >= 0; i--)
+            {
+                if (scaledButtons[age] != null && age < scaledButtons.Length)
+                {
+                    currentScaled = scaledButtons[age];
+                    break;
+                }
+            }
+        }
+
+        if (currentScaled == null)
+            return;
+
+        variableCount = currentScaled.variableCount;
+        minNumber = currentScaled.minNumber;
+        maxNumber = currentScaled.maxNumber;
+
+        levelTime = currentScaled.levelTime;
+
+        minAnswer = currentScaled.minAnswer;
+        maxAnswer = currentScaled.maxAnswer;
+
+        difficulty = currentScaled.difficulty;
+
+        MonsterHealth = currentScaled.MonsterHealth;
+        MonsterAttack = currentScaled.MonsterAttack;
+
+
+        preventRounding = currentScaled.preventRounding;
+
+
+        secondFixedNumber = new int[currentScaled.secondFixedNumber.Length];
+        for (int i = 0; i < secondFixedNumber.Length; i++)
+        {
+            secondFixedNumber[i] = currentScaled.secondFixedNumber[i];
+        }
+
+        thirdFixedNumber = new int[currentScaled.thirdFixedNumber.Length];
+        for (int i = 0; i < thirdFixedNumber.Length; i++)
+        {
+            thirdFixedNumber[i] = currentScaled.thirdFixedNumber[i];
+        }
+
+        enemPhaseTime = currentScaled.enemPhaseTime;
+        enemyAnswerRange = currentScaled.enemyAnswerRange;
+        enemyChoices = currentScaled.enemyChoices;
     }
 }

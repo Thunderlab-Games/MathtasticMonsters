@@ -4,6 +4,12 @@ using System;
 [Serializable]
 public class equipmentManager
 {
+    public bool AgeSet;
+
+    public AgeBracket currentAge;
+    public AgeBracket SetAge;
+
+
     [SerializeField]
     public int[] completedLevels;
 
